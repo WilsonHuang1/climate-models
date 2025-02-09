@@ -33,3 +33,4 @@ Install Nix via the recommended multi-user installation:
 sh <(curl -L https://nixos.org/nix/install) --daemon
 ```
 You might have to use `sudo`
+# Climate-Model
