@@ -75,3 +75,98 @@ class PrecipitationRatePlot(Plot):
 
         # Return selected, interpolated, averaged data to be plotted
         return selected_data
+    
+    def make_fig(self):
+        """Create a precipitation rate plot using cartopy and matplotlib."""
+
+        try:
+            # Clear any existing figures
+            plt.clf()
+            
+            # Create figure with specific size based on the ratio
+            self.fig = plt.figure(figsize=(10 * self.width_ratio, 6 * self.height_ratio))
+            
+            # Set up the map projection
+            data_proj = ccrs.PlateCarree()
+            ax = plt.axes(projection=data_proj)
+            
+            # Get the data and coordinates
+            lons = self.data.lon.values
+            lats = self.data.lat.values
+            plot_data = self.data.values
+            
+            # Create coordinate meshgrids
+            lon_mesh, lat_mesh = np.meshgrid(lons, lats)
+            
+            # Calculate the color range based on standard deviations
+            # For precipitation, we ensure the minimum is never negative
+            mean = float(plot_data.mean())
+            std = float(plot_data.std())
+            vmin = max(0, mean - self.num_std_dev * std)  # Ensure non-negative
+            vmax = mean + self.num_std_dev * std
+            
+            # Create the plot using pcolormesh for better performance
+            mesh = ax.pcolormesh(lon_mesh, lat_mesh, plot_data,
+                                transform=data_proj,
+                                cmap=self.color,
+                                vmin=vmin, vmax=vmax,
+                                shading='auto')
+            
+            # Add map features
+            ax.coastlines(resolution='50m')
+            ax.add_feature(cfeature.LAND, facecolor='lightgray', alpha=0.3)
+            ax.add_feature(cfeature.OCEAN, facecolor='white', alpha=0.3)
+            
+            # Add gridlines
+            gl = ax.gridlines(draw_labels=True,
+                                linestyle='--',
+                                linewidth=0.5,
+                                color='gray',
+                                alpha=0.5)
+            gl.top_labels = False
+            gl.right_labels = False
+            
+            # Set map extent
+            ax.set_extent([self.min_longitude, self.max_longitude,
+                            self.min_latitude, self.max_latitude],
+                            crs=data_proj)
+            
+            # Add colorbar
+            cax = self.fig.add_axes([0.2, 0.08, 0.6, 0.03])  # [x, y, width, height]
+            cbar = self.fig.colorbar(mesh, cax=cax, orientation='horizontal')
+            cbar.ax.tick_params(labelsize=8)
+            cbar.set_label(self.label, size=9)
+            
+            # Add title
+            period_years = f"{4000 + int(self.time_periods[0]) * 10}-{4000 + (int(self.time_periods[0]) + 1) * 10}"
+            plt.title(f"{self.title}\n{period_years}")
+            
+            # Add statistics text box
+            # For precipitation, include total accumulation
+            stats_text = (f"Mean Rate: {mean:.2f} mm/day\n"
+                            f"Std Dev: {std:.2f} mm/day\n"
+                            f"Range: [{float(plot_data.min()):.2f}, {float(plot_data.max()):.2f}] mm/day\n"
+                            f"Daily Accumulation: {mean * np.prod(~np.isnan(plot_data)):.1f} mm")
+            
+            ax.text(0.02, 0.98, stats_text,
+                    transform=ax.transAxes,
+                    verticalalignment='top',
+                    fontsize=9,
+                    bbox=dict(boxstyle='round',
+                                facecolor='white',
+                                alpha=0.8))
+            
+        except Exception as e:
+            print(f"Error in make_fig: {str(e)}")
+            import traceback
+            print("Full traceback:")
+            print(traceback.format_exc())
+            
+            # Create empty plot with error message if plotting fails
+            plt.clf()
+            self.fig = plt.figure(figsize=(10, 6))
+            ax = plt.axes()
+            plt.text(0.5, 0.5, f'Error creating plot: {str(e)}',
+                    ha='center', va='center',
+                    transform=ax.transAxes)
+            plt.tight_layout()
