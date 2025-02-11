@@ -104,6 +104,10 @@ html {
     display: none;
 }
 
+.spatial-options {
+    display: none;
+}
+
 .row {
     display: flex;
     flex-direction: row;
@@ -116,6 +120,97 @@ html {
     flex-wrap: wrap;
 }
 
+.global-plot-options {
+    display: none;  /* Hidden by default */
+}
+
+.coordinate-inputs {
+    margin: 15px auto;
+    max-width: 600px;
+    width: 100%;
+}
+
+.coordinate-inputs .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--white);
+    font-size: 14px;
+}
+
+.input-group input[type=number] {
+    width: 80px;
+    text-align: center;
+    color: var(--white);
+    background-color: transparent;
+    border: 1px solid var(--white);
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.region-note {
+    color: #FFD700;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.coordinate-inputs label {
+    color: var(--white);
+    margin-right: 10px;
+    margin-left: 20px;
+    min-width: 100px;
+}
+
+.coordinate-inputs input[type=number] {
+    width: 80px;
+    margin: 0 20px 0 0;
+}
+
+/* *************************** */
+/* DATA DOWNLOAD STYLING */
+/* *************************** */
+.data-download-section {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.data-download-section h3 {
+    color: var(--white);
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.download-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.download-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--darkBlue);
+    color: var(--white);
+    text-decoration: none;
+    border: 1px solid var(--white);
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+
+.download-button:hover {
+    background-color: var(--blue);
+}
+
 /* *************************** */
 /* CREATE TEXT STYLING */
 /* *************************** */
@@ -126,6 +221,14 @@ html {
     font-size: 18px;
     font-weight: 300;
     margin-bottom: 10px;
+}
+
+.subtitle-small {
+    text-align: center;
+    color: var(--lightBlue);
+    font-size: 14px;
+    font-weight: 300;
+    margin: 15px 0 5px 0;
 }
 
 .text {
@@ -436,4 +539,101 @@ input[type=range]:focus::-ms-fill-upper {
     justify-content: space-between;
     padding-top: 5px;
     width: 605px;
+}
+
+/* ********************************* */
+/* PERCENTAGE CHANGE TOGGLE STYLING */
+/* ********************************* */
+
+/* Container for the percentage change option */
+.difference-options {
+    transition: all 0.3s ease;
+}
+
+.difference-options .bubble {
+    min-width: 200px;
+}
+
+/* Toggle switch container */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin: 10px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--darkBlue);
+    border: 1px solid var(--white);
+    transition: .4s;
+}
+
+/* Slider circle */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--white);
+    transition: .4s;
+}
+
+/* Slider active state */
+input:checked + .slider {
+    background-color: var(--blue);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Rounded slider */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Toggle label styling */
+.toggle-label {
+    color: var(--white);
+    font-size: 14px;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+/* Container for toggle and label */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+/* Hover effects */
+.switch:hover .slider {
+    border-color: var(--lightBlue);
+}
+
+.switch:hover .slider:before {
+    box-shadow: 0 0 4px var(--lightBlue);
 }
